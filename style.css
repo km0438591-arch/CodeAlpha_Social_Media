@@ -1,0 +1,23 @@
+let posts = JSON.parse(localStorage.getItem('posts')||'[]');
+function render(){
+let feed=document.getElementById('feed');
+feed.innerHTML=posts.map((p,i)=>`
+<div class="post">
+<p>${p.text}</p>
+<small>${p.time}</small>
+<div class="post-actions">
+<button onclick="like(${i})">❤️ Like (${p.likes})</button>
+<button onclick="del(${i})">Delete</button>
+</div>
+</div>`).join('');
+}
+function createPost(){
+let input=document.getElementById('postInput');
+if(!input.value.trim()) return;
+posts.unshift({text:input.value,time:new Date().toLocaleString(),likes:0});
+localStorage.setItem('posts',JSON.stringify(posts));
+input.value=''; render();
+}
+function like(i){posts[i].likes++;localStorage.setItem('posts',JSON.stringify(posts));render();}
+function del(i){posts.splice(i,1);localStorage.setItem('posts',JSON.stringify(posts));render();}
+render();
